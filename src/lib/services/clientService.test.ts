@@ -1,6 +1,5 @@
 /**
  * Tests for clientService.
- * @vitest-environment jsdom
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { clientService } from './clientService';

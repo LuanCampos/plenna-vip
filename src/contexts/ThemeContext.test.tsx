@@ -101,6 +101,11 @@ describe('ThemeContext', () => {
       useTheme();
       return null;
     };
-    expect(() => render(<Consumer />)).toThrow('useTheme must be used within a ThemeProvider');
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      expect(() => render(<Consumer />)).toThrow('useTheme must be used within a ThemeProvider');
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
   });
 });

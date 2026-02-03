@@ -6,23 +6,16 @@ export default mergeConfig(
   defineConfig({
     test: {
       globals: true,
-      environment: 'jsdom',
+      environment: 'happy-dom',
       setupFiles: ['./src/test/setup.ts'],
       include: ['src/**/*.{test,spec}.{ts,tsx}'],
-      // Run faster: threads pool, parallel files, single-thread per file
+      testTimeout: 5000,
+      hookTimeout: 5000,
       pool: 'threads',
       poolOptions: {
-        threads: {
-          singleThread: false,
-          maxThreads: undefined,
-          minThreads: undefined,
-          useAtomics: true,
-        },
+        threads: { maxThreads: 16, minThreads: 1 },
       },
-      fileParallelism: true,
-      maxConcurrency: 5,
-      testTimeout: 10000,
-      hookTimeout: 10000,
+      reporter: 'basic',
       coverage: {
         all: true,
         include: ['src/**/*.{ts,tsx}'],

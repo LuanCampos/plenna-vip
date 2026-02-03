@@ -1,3 +1,7 @@
+/**
+ * @vitest-environment jsdom
+ * Uses jsdom so Storage.prototype spies (setItem/removeItem) work for error-handling tests.
+ */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   getSecureStorageItem,
@@ -5,6 +9,15 @@ import {
   removeSecureStorageItem,
   clearSecureStorage,
 } from './secureStorage';
+
+vi.mock('@/lib/logger', () => ({
+  logger: {
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+  },
+}));
 
 describe('secureStorage', () => {
   beforeEach(() => {

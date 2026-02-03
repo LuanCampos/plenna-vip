@@ -15,6 +15,7 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:run:fast": "vitest run --reporter=dot",
+    "test:run:shard": "node scripts/run-tests-sharded.mjs",
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {

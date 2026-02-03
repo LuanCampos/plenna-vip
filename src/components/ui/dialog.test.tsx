@@ -42,7 +42,7 @@ describe('Dialog component', () => {
   it('renders DialogFooter with correct layout', () => {
     render(
       <Dialog open onOpenChange={vi.fn()}>
-        <DialogContent>
+        <DialogContent aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle>Title</DialogTitle>
           </DialogHeader>
@@ -66,7 +66,7 @@ describe('Dialog component', () => {
         <DialogTrigger asChild>
           <button type="button">Open</button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent aria-describedby={undefined}>
           <DialogTitle>Triggered</DialogTitle>
         </DialogContent>
       </Dialog>

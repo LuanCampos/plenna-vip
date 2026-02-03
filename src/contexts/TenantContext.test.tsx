@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TenantProvider, useTenant } from './TenantContext';
@@ -50,6 +50,11 @@ describe('TenantContext', () => {
       useTenant();
       return null;
     };
-    expect(() => render(<Consumer />)).toThrow('useTenant must be used within a TenantProvider');
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      expect(() => render(<Consumer />)).toThrow('useTenant must be used within a TenantProvider');
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
   });
 });

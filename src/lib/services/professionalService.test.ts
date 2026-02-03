@@ -1,6 +1,5 @@
 /**
  * Tests for professionalService.
- * @vitest-environment jsdom
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { professionalService } from './professionalService';

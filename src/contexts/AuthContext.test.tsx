@@ -210,6 +210,11 @@ describe('AuthContext', () => {
       useAuth();
       return null;
     };
-    expect(() => render(<Consumer />)).toThrow('useAuth must be used within an AuthProvider');
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      expect(() => render(<Consumer />)).toThrow('useAuth must be used within an AuthProvider');
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
   });
 });

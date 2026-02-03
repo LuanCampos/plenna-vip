@@ -1,6 +1,5 @@
 /**
  * Tests for useClients hook.
- * @vitest-environment jsdom
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor, act } from '@testing-library/react';

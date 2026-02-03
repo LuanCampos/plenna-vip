@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LanguageProvider, useLanguage } from './LanguageContext';
@@ -61,6 +61,11 @@ describe('LanguageContext', () => {
       useLanguage();
       return null;
     };
-    expect(() => render(<Consumer />)).toThrow('useLanguage must be used within a LanguageProvider');
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      expect(() => render(<Consumer />)).toThrow('useLanguage must be used within a LanguageProvider');
+    } finally {
+      consoleErrorSpy.mockRestore();
+    }
   });
 });

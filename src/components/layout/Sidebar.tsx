@@ -14,6 +14,7 @@ import {
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { routePreload } from '@/lib/routePreload';
 
 const navItems = [
   { to: '/', icon: LayoutDashboard, labelKey: 'dashboard' },
@@ -81,6 +82,7 @@ export const Sidebar = () => {
               key={item.to}
               to={item.to}
               end={item.to === '/'}
+              onMouseEnter={() => routePreload[item.to]?.()}
               onClick={() => setIsOpen(false)}
               className={({ isActive }) => cn(
                 "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
@@ -113,6 +115,7 @@ export const Sidebar = () => {
         <div className="p-4 border-t border-border/50">
           <NavLink
             to="/settings"
+            onMouseEnter={() => routePreload['/settings']?.()}
             onClick={() => setIsOpen(false)}
             className={({ isActive }) => cn(
               "group flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",

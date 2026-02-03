@@ -42,6 +42,7 @@ lerna-debug.log*
 
 # Testing
 coverage/
+.vitest-reports/
 
 # OS
 .DS_Store
