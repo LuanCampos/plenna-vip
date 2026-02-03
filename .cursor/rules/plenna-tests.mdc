@@ -1,0 +1,45 @@
+---
+description: Testes Vitest, mocks centralizados e cobertura obrigatória
+globs: src/**/*.test.ts, src/**/*.test.tsx, **/vitest.config.*
+alwaysApply: false
+---
+
+# Plenna VIP — Testes
+
+## Filosofia (REGRA DE OURO)
+
+Quando um teste falha, **a primeira ação é investigar se o código está errado**. NUNCA ajuste o teste para passar sem confirmar que o comportamento atual está correto.
+
+| Situação | Ação correta | Ação ERRADA |
+|----------|--------------|-------------|
+| Teste falha, código errado | Corrigir código | Ajustar teste |
+| Teste falha, teste errado | Corrigir teste | Deletar teste |
+| Requisito mudou | Atualizar teste e código | Só ajustar teste |
+
+## Testes Fortes (obrigatório)
+
+- **Não use:** `expect(result).toBeDefined()` ou `expect(result).toBeTruthy()` como critério de sucesso.
+- **Use:** `expect(result).toBe(expected)` ou `expect(result).toEqual({ ... })`; teste comportamento observável; cubra edge cases e inputs maliciosos quando aplicável.
+
+## Mocks Centralizados (OBRIGATÓRIO)
+
+**NUNCA** crie mocks inline (UUIDs, entidades, payloads) no arquivo de teste. Use **sempre** `@/test/mocks`:
+
+- IDs e entidades: `MOCK_TENANT_ID`, `MOCK_VALID_CLIENT`, `createMockClient()`, etc.
+- Segurança: `XSS_HTML_PAYLOADS`, payloads em `src/test/mocks/security.ts`.
+- Contextos: `MOCK_TENANT_CONTEXT`, `MOCK_LANGUAGE_CONTEXT` para `vi.mock('@/contexts/...')`.
+- Browser: `setupConsoleMocks()` / `restoreConsoleMocks()` de `@/test/mocks`.
+
+## Estrutura e Convenções
+
+- Testes co-localizados: `arquivo.ts` → `arquivo.test.ts`; componente → `ComponentName.test.tsx`.
+- Vitest + Testing Library; `describe` / `it` / `expect` de `vitest`; para hooks use `renderHook`, `act`, `waitFor`.
+
+## Cobertura
+
+- Meta **100%** em `src/lib/`, `src/hooks/`, `src/components/`, `src/contexts/`, `src/pages/`.
+- Código novo deve ter cobertura desde o primeiro commit. Exclusões apenas conforme `vitest.config.ts` (ex.: supabase.ts, index.ts, main.tsx, App.tsx).
+
+## Verificação
+
+Antes de dar por concluída qualquer alteração que afete código testável: `npm run test:run` deve passar; use `npm run test:coverage` para checar cobertura.

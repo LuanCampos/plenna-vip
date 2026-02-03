@@ -1,0 +1,56 @@
+---
+description: Arquitetura Plenna VIP, fluxo de dados e verificação obrigatória
+alwaysApply: true
+---
+
+# Plenna VIP — Regras de Arquitetura e Verificação
+
+## Stack e Fluxo de Dados (NUNCA viole)
+
+**Stack:** Vite + React 18 + TypeScript + Tailwind CSS + shadcn/ui + Supabase
+
+**Fluxo de dados (OBRIGATÓRIO):**
+```
+Componente → Hook → Service (Supabase)
+```
+
+- Componentes **NUNCA** chamam `supabase.from('table')` diretamente. Sempre use hook → service.
+- Estrutura: `src/pages/` (páginas), `src/components/{domain}/` (por domínio: appointment, client, service, professional), `src/components/common/`, `src/components/ui/` (não editar), `src/hooks/`, `src/lib/services/`, `src/contexts/`, `src/i18n/translations/`, `src/types/`.
+
+## Regras Absolutas (rígidas)
+
+| ❌ PROIBIDO | ✅ OBRIGATÓRIO |
+|-------------|----------------|
+| `export default Component` | `export const Component` |
+| `any` | `unknown` ou tipo específico |
+| `console.log()` / `console.*` | `logger.debug('event', { data })` de `@/lib/logger` |
+| `localStorage.getItem()` | `getSecureStorageItem()` de `@/lib/storage/secureStorage` |
+| `'R$'` ou valores hardcoded | `CURRENCY_SYMBOL` de `@/lib/config/currency` |
+| `<DialogFooter>` | `<div className="... bg-secondary/30">` (footer estilizado) |
+| `className="text-gray-500"` | `className="text-muted-foreground"` |
+| `className="bg-gray-100"` | `className="bg-secondary/50"` |
+| Supabase em componente | Hook → service |
+
+## Antes de Implementar
+
+- **SEMPRE** esclareça dúvidas ANTES de alterar código.
+- Entenda o problema (sintomas específicos); evite suposições; confirme escopo; valide a abordagem antes de codar.
+- Múltiplas iterações para um problema simples indicam falta de clarificação inicial.
+
+## Verificação Obrigatória (SEMPRE)
+
+**TODA alteração DEVE passar por:**
+
+```bash
+npx tsc --noEmit        # 1. Tipos — zero erros
+npm run test:run        # 2. Testes passam
+npm run lint            # 3. Zero warnings
+npm run build           # 4. Build sem erros
+```
+
+- Ordem: durante o dev rode `tsc` a cada 2–3 arquivos; antes de finalizar: tsc → test → lint → build.
+- **NÃO avançar** se qualquer comando falhar. Alterações não estão completas até todos passarem.
+
+## Papéis [Planejador] / [Executor] / [Revisor]
+
+Nenhum papel pode violar: fluxo Component → Hook → Service, regras absolutas, ou pular verificação (test/lint/build) quando houver mudanças de código. Em conflito com o plano, as regras vencem.

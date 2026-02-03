@@ -1,0 +1,84 @@
+---
+description: Padrões de UI — Dialogs, formulários, tokens de cor, nomenclatura e a11y
+globs: src/**/*.tsx
+alwaysApply: false
+---
+
+# Plenna VIP — UI e Componentes React
+
+## Nomenclatura de Componentes (OBRIGATÓRIO)
+
+| Sufixo | Uso | Exemplo |
+|--------|-----|---------|
+| `*FormFields` | Campos de form reutilizáveis (sem dialog) | `ClientFormFields` |
+| `*FormDialog` | Dialog criar/editar UMA entidade | `AppointmentFormDialog` |
+| `*ListDialog` | Dialog com lista + CRUD | `ServiceListDialog` |
+| `*SettingsDialog` | Dialog com tabs/seções | `TenantSettingsDialog` |
+| `*ViewDialog` | Dialog somente leitura | `AppointmentDetailsDialog` |
+| `*Card` | Exibição compacta de entidade | `AppointmentCard` |
+| `*List` | Lista fora de dialog | `ClientList` |
+| `*Section` | Seção em página/dialog | `ProfileSection` |
+| `*Panel` | Seção autônoma complexa | `CalendarPanel` |
+| `*Calendar` | Visualização calendário | `WeekCalendar` |
+| `*Selector` | Picker inline | `ProfessionalSelector` |
+| `*Chart` | Gráfico | `RevenueChart` |
+| `*Input` | Input especializado | `PhoneInput` |
+| `*Progress` | Indicador de progresso | `BookingProgress` |
+
+**❌ Nunca:** `*Manager`, `*Container`, `*Modal`, `*Form` (para dialogs), `*Wrapper`.
+
+## Tokens de Cor (NUNCA hardcoded)
+
+| Contexto | Classe |
+|----------|--------|
+| Fundo dialog/card | `bg-card` |
+| Fundo inputs | `bg-secondary/50` |
+| Fundo list items | `bg-secondary/50` |
+| Footer dialog | `bg-secondary/30` |
+| Texto principal | `text-foreground` |
+| Texto secundário | `text-muted-foreground` |
+| Bordas | `border-border` |
+| Ícone título | `text-primary` |
+| Ação destrutiva | `text-destructive` / `bg-destructive` |
+| Hover editar | `hover:text-primary hover:bg-primary/10` |
+| Hover deletar | `hover:text-destructive hover:bg-destructive/10` |
+
+## Dialog (padrão OBRIGATÓRIO)
+
+```tsx
+<Dialog open={open} onOpenChange={onOpenChange}>
+  <DialogContent className="bg-card border-border sm:max-w-md flex flex-col gap-0 p-0 max-h-[90vh] overflow-hidden">
+    <DialogHeader className="px-6 pt-6 pb-4 border-b border-border">
+      <DialogTitle className="flex items-center gap-2 text-lg font-semibold">
+        <Icon className="h-5 w-5 text-primary" />
+        {t('title')}
+      </DialogTitle>
+    </DialogHeader>
+    <div className="px-6 py-4 overflow-y-auto">
+      <div className="space-y-4">{/* campos */}</div>
+    </div>
+    <div className="px-6 py-4 border-t border-border bg-secondary/30 flex gap-2 justify-end">
+      <Button variant="outline" onClick={handleClose}>{t('cancel')}</Button>
+      <Button onClick={handleSave} disabled={saving}>{t('save')}</Button>
+    </div>
+  </DialogContent>
+</Dialog>
+```
+
+Tamanhos: `sm:max-w-sm` (confirm) | `sm:max-w-md` (form) | `sm:max-w-lg` (form complexo) | `sm:max-w-xl` (lista). **Não use `<DialogFooter>`.**
+
+## Formulário e Inputs
+
+- Campo: `Label htmlFor="id"` + `Input id="id" className="h-10 bg-secondary/50 border-border"`.
+- Moeda: `CURRENCY_SYMBOL` de `@/lib/config/currency`; Input `pl-10`, span com símbolo à esquerda.
+- Select: `SelectTrigger className="h-10 bg-secondary/50 border-border"`, `SelectContent className="bg-card border-border"`.
+
+## Confirmação de Exclusão
+
+Sempre `ConfirmDialog` de `@/components/common` com `variant="destructive"`, `loading`, `title`, `description`. Nunca crie `Delete*ConfirmDialog` ou `*DeleteDialog`.
+
+## Acessibilidade (a11y)
+
+- Botões de ícone: **SEMPRE** `aria-label={t('edit')}` (ou ação correspondente).
+- Inputs: `id` + `<Label htmlFor="id">` pareados.
+- Imagens: `alt` descritivo ou `alt=""` se decorativa.

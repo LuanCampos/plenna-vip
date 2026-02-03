@@ -36,6 +36,7 @@ export const en = {
   services: 'Services',
   professionals: 'Professionals',
   settings: 'Settings',
+  menu: 'Menu',
   
   // Dashboard
   welcomeMessage: 'Welcome to Plenna Vip',
@@ -98,6 +99,14 @@ export const en = {
   email: 'Email',
   password: 'Password',
   forgotPassword: 'Forgot password?',
+  login: 'Login',
+  register: 'Register',
+  loginTitle: 'Sign in to your account',
+  registerTitle: 'Create your account',
+  noAccount: "Don't have an account?",
+  hasAccount: 'Already have an account?',
+  name: 'Name',
+  yourName: 'Your name',
   
   // Errors
   requiredField: 'Required field',
@@ -105,6 +114,96 @@ export const en = {
   invalidPhone: 'Invalid phone',
   minLength: 'Minimum {min} characters',
   maxLength: 'Maximum {max} characters',
+  nameTooShort: 'Name too short',
+  nameTooLong: 'Name too long',
+  textTooLong: 'Text too long',
+  priceMustBePositive: 'Price must be positive',
+  durationMustBeInteger: 'Duration must be an integer',
+  durationMustBePositive: 'Duration must be positive',
+  invalidDateTime: 'Invalid date/time',
+  invalidDateFormat: 'Invalid date format',
+  invalidTimeFormat: 'Invalid time format',
+  invalidUrl: 'Invalid URL',
+  atLeastOneService: 'Select at least one service',
+  
+  // Page descriptions
+  bookingsDescription: 'Manage your bookings',
+  clientsDescription: 'Manage your clients',
+  servicesDescription: 'Manage your services',
+  professionalsDescription: 'Manage your professionals',
+  settingsDescription: 'Configure your store',
+  
+  // Header
+  changeLanguage: 'Change language',
+  changeTheme: 'Change theme',
+  
+  // Booking (public page)
+  bookingTitle: 'Book Appointment',
+  bookingSubtitle: 'Choose the desired services',
+  selectServices: 'Select services',
+  selectedServices: 'Selected services',
+  totalDuration: 'Total duration',
+  totalPrice: 'Total price',
+  selectDateTime: 'Choose date and time',
+  yourInfo: 'Your information',
+  confirmBooking: 'Confirm booking',
+  bookingSuccess: 'Booking confirmed!',
+  bookingSuccessMessage: 'You will receive a confirmation soon.',
+  addMoreServices: 'Add more services',
+  removeService: 'Remove service',
+  
+  // Availability
+  noAvailableSlots: 'No available slots',
+  availableSlots: 'Available slots',
+  selectSlot: 'Select a time slot',
+  
+  // Photos
+  addPhoto: 'Add photo',
+  photos: 'Photos',
+  maxPhotos: 'Maximum 3 photos',
+  uploadPhoto: 'Upload photo',
+  deletePhoto: 'Delete photo',
+  
+  // Calendar
+  today: 'Today',
+  dayView: 'Day',
+  weekView: 'Week',
+  noAppointments: 'No appointments',
+  
+  // Layout
+  myAccount: 'My account',
+  notifications: 'Notifications',
+  
+  // Errors
+  errorConflict: 'Time slot already booked',
+  errorNoSlots: 'No available time slots',
+  errorUpload: 'Error uploading photo',
+  storeNotFound: 'Store not found',
+  
+  // Settings
+  storeSettings: 'Store Settings',
+  businessHours: 'Business Hours',
+  storeInfo: 'Store information',
+  
+  // Schedule Overrides
+  scheduleOverride: 'Schedule override',
+  scheduleOverrides: 'Schedule overrides',
+  addOverride: 'Add override',
+  editOverride: 'Edit override',
+  removeOverride: 'Remove override',
+  overrideType: 'Type',
+  workOnThisDay: 'Work on this period',
+  dayOff: 'Day off/Absence',
+  overrideReason: 'Reason',
+  reasonVacation: 'Vacation',
+  reasonSickLeave: 'Sick leave',
+  reasonPersonal: 'Personal reason',
+  reasonSpecialEvent: 'Special event',
+  reasonClientRequest: 'Client request',
+  startDate: 'Start date',
+  endDate: 'End date',
+  singleDay: 'Single day',
+  dateRange: 'Date range',
 } as const;
 
 export type TranslationKey = keyof typeof en;

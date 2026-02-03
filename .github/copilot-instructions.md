@@ -560,17 +560,15 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ComponentName } from './ComponentName';
+import { MOCK_TENANT_CONTEXT, MOCK_LANGUAGE_CONTEXT } from '@/test/mocks';
 
-// Mock de contextos se necessário
+// Mock de contextos usando mocks centralizados
 vi.mock('@/contexts/LanguageContext', () => ({
-  useLanguage: () => ({ t: (key: string) => key }),
+  useLanguage: () => MOCK_LANGUAGE_CONTEXT,
 }));
 
 vi.mock('@/contexts/TenantContext', () => ({
-  useTenant: () => ({ 
-    currentTenant: { id: 'tenant-1', name: 'Test Salon' },
-    loading: false 
-  }),
+  useTenant: () => MOCK_TENANT_CONTEXT,
 }));
 
 describe('ComponentName', () => {
@@ -630,6 +628,84 @@ describe('useHookName', () => {
     });
   });
 });
+```
+
+### Mocks Centralizados (OBRIGATÓRIO)
+
+**NUNCA crie mocks inline em arquivos de teste.** Use os mocks centralizados em `src/test/mocks/`.
+
+```typescript
+// ✅ CORRETO — Importar do diretório centralizado
+import { 
+  MOCK_TENANT_ID,
+  MOCK_VALID_CLIENT,
+  XSS_HTML_PAYLOADS,
+  setupConsoleMocks,
+  MOCK_TENANT_CONTEXT,
+} from '@/test/mocks';
+
+// ❌ ERRADO — Criar UUIDs/dados inline
+const tenantId = '550e8400-e29b-41d4-a716-446655440000';
+const validClient = { name: 'Maria', phone: '11999999999' };
+```
+
+#### Estrutura de Mocks
+
+| Arquivo | Conteúdo |
+|---------|----------|
+| `src/test/mocks/ids.ts` | UUIDs padronizados (tenant, client, service, etc.) |
+| `src/test/mocks/entities/` | Mock data para cada entidade |
+| `src/test/mocks/security.ts` | Payloads XSS, SQL Injection, etc. |
+| `src/test/mocks/browser.ts` | Helpers para console, localStorage |
+| `src/test/mocks/contexts.ts` | Mocks para TenantContext, AuthContext, etc. |
+
+#### Uso de Mocks de Contexto em Testes de Componente
+
+```typescript
+import { MOCK_TENANT_CONTEXT, MOCK_LANGUAGE_CONTEXT } from '@/test/mocks';
+
+vi.mock('@/contexts/TenantContext', () => ({
+  useTenant: () => MOCK_TENANT_CONTEXT,
+}));
+
+vi.mock('@/contexts/LanguageContext', () => ({
+  useLanguage: () => MOCK_LANGUAGE_CONTEXT,
+}));
+```
+
+#### Uso de Mocks de Segurança
+
+```typescript
+import { XSS_HTML_PAYLOADS } from '@/test/mocks';
+
+it.each(XSS_HTML_PAYLOADS)('should escape XSS: %s', (payload) => {
+  const result = sanitize(payload);
+  expect(result).not.toContain('<script>');
+});
+```
+
+#### Uso de Mocks de Browser
+
+```typescript
+import { setupConsoleMocks, restoreConsoleMocks } from '@/test/mocks';
+
+beforeEach(() => {
+  setupConsoleMocks();
+});
+
+afterEach(() => {
+  restoreConsoleMocks();
+});
+```
+
+#### Factories para Customização
+
+```typescript
+import { createMockClient, createMockAppointment } from '@/test/mocks';
+
+// Usar dados existentes com customização
+const customClient = createMockClient({ name: 'Nome Custom' });
+const cancelledAppointment = createMockAppointment({ status: 'cancelled' });
 ```
 
 ---

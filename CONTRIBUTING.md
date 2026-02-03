@@ -627,8 +627,101 @@ npm run test:coverage # Com relatório de cobertura
 - [ ] Importar `describe`, `it`, `expect` de `vitest`
 - [ ] Usar `beforeEach` para setup/cleanup
 - [ ] Testar casos de sucesso E falha
+- [ ] **Usar mocks centralizados** de `@/test/mocks`
 - [ ] Para segurança: testar payloads maliciosos (XSS, SQL injection)
 - [ ] Rodar `npm run test:run` antes de commit
+
+### Mocks Centralizados (OBRIGATÓRIO)
+
+**NUNCA crie mocks inline em arquivos de teste.** Use os mocks centralizados em `src/test/mocks/`.
+
+```typescript
+// ✅ CORRETO — Importar do diretório centralizado
+import { 
+  MOCK_TENANT_ID,
+  MOCK_VALID_CLIENT,
+  XSS_HTML_PAYLOADS,
+  setupConsoleMocks,
+} from '@/test/mocks';
+
+// ❌ ERRADO — Criar UUIDs/dados inline
+const tenantId = '550e8400-e29b-41d4-a716-446655440000';
+const validClient = { name: 'Maria', phone: '11999999999' };
+```
+
+#### Estrutura de Mocks
+
+| Arquivo | Conteúdo |
+|---------|----------|
+| `src/test/mocks/ids.ts` | UUIDs para tenant, client, service, professional, appointment |
+| `src/test/mocks/entities/` | Mock data para cada entidade (client.ts, service.ts, etc.) |
+| `src/test/mocks/security.ts` | Payloads XSS, SQL Injection, e outros vetores de ataque |
+| `src/test/mocks/browser.ts` | Helpers para console, localStorage, matchMedia |
+| `src/test/mocks/contexts.ts` | Mocks para TenantContext, AuthContext, LanguageContext |
+
+#### Uso de Mocks de Entidade
+
+```typescript
+import { 
+  MOCK_VALID_CLIENT,      // Input para criação
+  MOCK_CLIENT_ENTITY,     // Entidade do banco (com id, timestamps)
+  createMockClient,       // Factory para customização
+} from '@/test/mocks';
+
+// Usar dados existentes
+const result = clientSchema.parse(MOCK_VALID_CLIENT);
+
+// Customizar quando necessário
+const customClient = createMockClient({ name: 'Nome Custom' });
+```
+
+#### Uso de Mocks de Segurança
+
+```typescript
+import { XSS_HTML_PAYLOADS, SQL_INJECTION_PAYLOADS } from '@/test/mocks';
+
+it.each(XSS_HTML_PAYLOADS)('should escape XSS: %s', (payload) => {
+  const result = sanitize(payload);
+  expect(result).not.toContain('<script>');
+});
+```
+
+#### Uso de Mocks de Browser
+
+```typescript
+import { setupConsoleMocks, restoreConsoleMocks } from '@/test/mocks';
+
+beforeEach(() => {
+  setupConsoleMocks();
+});
+
+afterEach(() => {
+  restoreConsoleMocks();
+});
+```
+
+#### Uso de Mocks de Contexto
+
+```typescript
+import { MOCK_TENANT_CONTEXT, MOCK_LANGUAGE_CONTEXT } from '@/test/mocks';
+
+vi.mock('@/contexts/TenantContext', () => ({
+  useTenant: () => MOCK_TENANT_CONTEXT,
+}));
+
+vi.mock('@/contexts/LanguageContext', () => ({
+  useLanguage: () => MOCK_LANGUAGE_CONTEXT,
+}));
+```
+
+#### Quando Criar Novos Mocks
+
+1. **Nova entidade** → Criar arquivo em `src/test/mocks/entities/`
+2. **Novo vetor de ataque** → Adicionar array em `src/test/mocks/security.ts`
+3. **Nova API do browser** → Adicionar helper em `src/test/mocks/browser.ts`
+4. **Novo contexto** → Adicionar mock em `src/test/mocks/contexts.ts`
+
+> ⚠️ **Sempre re-exportar** novos mocks no `src/test/mocks/index.ts`
 
 ---
 
@@ -648,6 +741,7 @@ npm run test:coverage # Com relatório de cobertura
 | Cores hardcoded (`text-gray-500`) | Tokens semânticos (`text-muted-foreground`) |
 | `localStorage.getItem` | `getSecureStorageItem` |
 | Valores hardcoded (`'R$'`, `30`) | Constantes em `src/lib/config/` |
+| Mocks inline em testes | Mocks centralizados de `@/test/mocks` |
 
 ---
 

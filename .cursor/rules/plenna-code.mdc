@@ -1,0 +1,51 @@
+---
+description: TypeScript, logger, config, i18n, erros e validação Zod
+globs: src/**/*.ts, src/**/*.tsx
+alwaysApply: false
+---
+
+# Plenna VIP — Código, Tipos e Configuração
+
+## TypeScript e Exports
+
+- **Named exports:** `export const Component` / `export function fn`. Proibido `export default`.
+- **Tipos:** Sem `any`; use `unknown` ou tipo específico. Types em `src/types/` com convenção: entidade base, `*Create`, `*Update`, `*WithDetails`, `*Input` (Zod).
+
+## Logger e Storage
+
+- **Nunca** `console.log` / `console.*`. Use `logger.debug('context', { data })` e `logger.error('event', { error })` de `@/lib/logger`.
+- Acesso a armazenamento: `getSecureStorageItem()` / `setSecureStorageItem()` de `@/lib/storage/secureStorage`; nunca `localStorage.getItem` direto.
+
+## Configurações (nunca hardcoded)
+
+Valores de negócio em `src/lib/config/`: `currency.ts` (CURRENCY_SYMBOL, CURRENCY_CODE), `business.ts` (BOOKING_SLOT_DURATION, BUSINESS_HOURS), `limits.ts`. Importe de lá; não use `'R$'`, `30`, etc. no código.
+
+## i18n
+
+- Chaves em **pt.ts** e **en.ts** (mesma ordem, mesmas chaves).
+- Componentes: `const { t } = useLanguage();` e `t('chave')`. Nada hardcoded para texto de UI.
+
+## Validação Zod
+
+- Inputs de usuário validados com Zod antes de enviar ao backend. Schemas em `src/lib/validators/` (ex.: `clientSchema.ts`). Use `schema.parse(data)` e exporte tipo com `z.infer<typeof schema>`.
+
+## Tratamento de Erros
+
+- Operações async: `try/catch` + `toast.success` / `toast.error` (sonner) + `logger.error` em falha. `finally` para reset de loading.
+- Sucesso: `toast.success(t('msg'))`. Erro: `toast.error(t('erro'))` + `logger.error('context', { error })`.
+
+## Performance
+
+- `useMemo` para cálculos pesados derivados de props/state.
+- `useCallback` para funções passadas como props a filhos.
+
+## Imports Padrão (quando aplicável)
+
+```ts
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useTenant } from '@/contexts/TenantContext';
+import { logger } from '@/lib/logger';
+import { getSecureStorageItem } from '@/lib/storage/secureStorage';
+```
+
+Services por domínio: `@/lib/services/appointmentService`, etc.

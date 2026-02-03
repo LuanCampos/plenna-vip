@@ -21,3 +21,4 @@ export {
   CardDescription,
   CardContent,
 } from './card';
+export { Skeleton, SkeletonCard, SkeletonList } from './skeleton';
