@@ -1,5 +1,16 @@
-import { createContext, useContext, useState, useMemo, ReactNode, useEffect } from 'react';
+/**
+ * TenantContext - Manages current tenant selection.
+ * Integrates with AuthContext to load user's tenants after login.
+ */
+import { createContext, useContext, useState, useMemo, useCallback, ReactNode, useEffect } from 'react';
 import { Tenant, BusinessHours, TenantSettings } from '@/types/tenant';
+import { useAuth } from './AuthContext';
+import { tenantUserService } from '@/lib/services/tenantUserService';
+import { logger } from '@/lib/logger';
+import { getSecureStorageItem, setSecureStorageItem, removeSecureStorageItem } from '@/lib/storage/secureStorage';
+
+// Storage key for last selected tenant
+const LAST_TENANT_KEY = 'plenna_last_tenant_id';
 
 // Development mock tenant for testing without backend
 const DEV_BUSINESS_HOURS: BusinessHours = {
@@ -35,8 +46,10 @@ const DEV_TENANT: Tenant = {
 
 interface TenantContextType {
   currentTenant: Tenant | null;
+  tenants: Tenant[];
   setCurrentTenant: (tenant: Tenant | null) => void;
   loading: boolean;
+  error: string | null;
 }
 
 const TenantContext = createContext<TenantContextType | undefined>(undefined);
@@ -46,24 +59,103 @@ interface TenantProviderProps {
 }
 
 export const TenantProvider = ({ children }: TenantProviderProps) => {
-  const [currentTenant, setCurrentTenant] = useState<Tenant | null>(null);
+  const { user, loading: authLoading } = useAuth();
+  const [currentTenant, setCurrentTenantState] = useState<Tenant | null>(null);
+  const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(true);
-  const [initialized, setInitialized] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  // In development mode, auto-set the dev tenant on first load only
+  // Load tenants when user changes
   useEffect(() => {
-    if (!initialized) {
-      if (import.meta.env.DEV) {
-        setCurrentTenant(DEV_TENANT);
+    const loadTenants = async () => {
+      // If auth is still loading, wait
+      if (authLoading) {
+        return;
       }
-      setLoading(false);
-      setInitialized(true);
+
+      // If no user, clear tenant state
+      if (!user) {
+        setCurrentTenantState(null);
+        setTenants([]);
+        setLoading(false);
+        setError(null);
+        removeSecureStorageItem(LAST_TENANT_KEY);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        // In development mode without Supabase configured, use mock tenant
+        if (import.meta.env.DEV && !import.meta.env.VITE_SUPABASE_URL) {
+          logger.debug('TenantContext.dev.usingMockTenant');
+          setTenants([DEV_TENANT]);
+          setCurrentTenantState(DEV_TENANT);
+          setLoading(false);
+          return;
+        }
+
+        // Fetch user's tenants
+        const userTenants = await tenantUserService.getUserTenants(user.id);
+        setTenants(userTenants);
+
+        if (userTenants.length === 0) {
+          // User has no tenants - they need to be invited or create one
+          logger.debug('TenantContext.noTenants', { userId: user.id });
+          setCurrentTenantState(null);
+          setLoading(false);
+          return;
+        }
+
+        // Try to restore last selected tenant
+        const lastTenantId = getSecureStorageItem(LAST_TENANT_KEY);
+        const lastTenant = lastTenantId 
+          ? userTenants.find(t => t.id === lastTenantId)
+          : null;
+
+        if (lastTenant) {
+          setCurrentTenantState(lastTenant);
+        } else {
+          // Select first tenant
+          const firstTenant = userTenants[0];
+          if (firstTenant) {
+            setCurrentTenantState(firstTenant);
+            setSecureStorageItem(LAST_TENANT_KEY, firstTenant.id);
+          }
+        }
+
+        setLoading(false);
+      } catch (err) {
+        logger.error('TenantContext.loadTenants.failed', { error: err });
+        setError('errorLoading');
+        setLoading(false);
+
+        // In dev mode, fallback to mock tenant on error
+        if (import.meta.env.DEV) {
+          logger.debug('TenantContext.dev.fallbackToMock');
+          setTenants([DEV_TENANT]);
+          setCurrentTenantState(DEV_TENANT);
+        }
+      }
+    };
+
+    loadTenants();
+  }, [user, authLoading]);
+
+  // Setter that also persists to storage
+  const setCurrentTenant = useCallback((tenant: Tenant | null) => {
+    setCurrentTenantState(tenant);
+    if (tenant) {
+      setSecureStorageItem(LAST_TENANT_KEY, tenant.id);
+    } else {
+      removeSecureStorageItem(LAST_TENANT_KEY);
     }
-  }, [initialized]);
+  }, []);
 
   const value = useMemo(
-    () => ({ currentTenant, setCurrentTenant, loading }),
-    [currentTenant, loading]
+    () => ({ currentTenant, tenants, setCurrentTenant, loading, error }),
+    [currentTenant, tenants, setCurrentTenant, loading, error]
   );
 
   return (

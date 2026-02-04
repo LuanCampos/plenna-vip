@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import type { Client } from '@/types/client';
@@ -47,6 +47,18 @@ const { mockClient, mockService, mockProfessional } = vi.hoisted(() => ({
 
 vi.mock('@/contexts/LanguageContext', () => ({
   useLanguage: () => ({ t: (key: string) => key }),
+}));
+
+// Mock AuthContext for Login and Register pages
+vi.mock('@/contexts/AuthContext', () => ({
+  useAuth: () => ({
+    user: null,
+    session: null,
+    loading: false,
+    signIn: vi.fn(),
+    signUp: vi.fn(),
+    signOut: vi.fn(),
+  }),
 }));
 
 vi.mock('@/components/client', () => ({
@@ -175,6 +187,7 @@ describe('Pages', () => {
       <MemoryRouter initialEntries={['/login']}>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/" element={<div>Dashboard</div>} />
         </Routes>
       </MemoryRouter>
     );
@@ -183,7 +196,11 @@ describe('Pages', () => {
     await user.type(screen.getByLabelText('password'), 'secret');
     await user.click(screen.getByRole('button', { name: 'login' }));
 
-    expect(screen.getByRole('button', { name: 'login' })).toBeInTheDocument();
+    // After successful login (which is mocked), it redirects to dashboard
+    // Just verify the form was submitted by checking we're no longer on login
+    await waitFor(() => {
+      expect(screen.queryByText('loginTitle')).not.toBeInTheDocument();
+    });
   });
 
   it('calls handleSubmit when Register form is submitted', async () => {

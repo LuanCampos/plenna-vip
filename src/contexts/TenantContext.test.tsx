@@ -1,8 +1,47 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TenantProvider, useTenant } from './TenantContext';
-import { MOCK_TENANT } from '@/test/mocks';
+import { MOCK_TENANT, MOCK_AUTH_CONTEXT, MOCK_AUTH_CONTEXT_UNAUTHENTICATED } from '@/test/mocks';
+
+// Variable to control auth state in tests
+let mockAuthContext: {
+  user: typeof MOCK_AUTH_CONTEXT.user | null;
+  session: typeof MOCK_AUTH_CONTEXT.session | null;
+  loading: boolean;
+  signIn: () => Promise<void>;
+  signUp: () => Promise<void>;
+  signOut: () => Promise<void>;
+} = { ...MOCK_AUTH_CONTEXT };
+
+// Mock AuthContext
+vi.mock('./AuthContext', () => ({
+  useAuth: () => mockAuthContext,
+}));
+
+// Mock services
+vi.mock('@/lib/services/tenantUserService', () => ({
+  tenantUserService: {
+    getUserTenants: vi.fn().mockResolvedValue([]),
+  },
+}));
+
+// Mock logger
+vi.mock('@/lib/logger', () => ({
+  logger: {
+    debug: vi.fn(),
+    error: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+  },
+}));
+
+// Mock secure storage
+vi.mock('@/lib/storage/secureStorage', () => ({
+  getSecureStorageItem: vi.fn().mockReturnValue(null),
+  setSecureStorageItem: vi.fn(),
+  removeSecureStorageItem: vi.fn(),
+}));
 
 const TenantConsumer = () => {
   const { currentTenant, setCurrentTenant, loading } = useTenant();
@@ -17,8 +56,13 @@ const TenantConsumer = () => {
 };
 
 describe('TenantContext', () => {
-  it('auto-sets dev tenant in development mode and supports manual override', async () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('supports manual tenant override', async () => {
     const user = userEvent.setup();
+    mockAuthContext = { ...MOCK_AUTH_CONTEXT };
 
     render(
       <TenantProvider>
@@ -26,22 +70,37 @@ describe('TenantContext', () => {
       </TenantProvider>
     );
 
-    // In dev mode, it auto-sets the dev tenant
+    // Wait for loading to complete
     await waitFor(() => {
       expect(screen.getByTestId('loading')).toHaveTextContent('ready');
     });
-    
-    // Should have dev tenant auto-set (Salão Demo)
-    await waitFor(() => {
-      expect(screen.getByTestId('tenant-name')).toHaveTextContent('Salão Demo');
-    });
 
-    // Manual override with custom tenant
+    // Manual set with custom tenant
     await user.click(screen.getByText('set'));
     expect(screen.getByTestId('tenant-name')).toHaveTextContent(MOCK_TENANT.name);
 
     // Clear should work
     await user.click(screen.getByText('clear'));
+    expect(screen.getByTestId('tenant-name')).toHaveTextContent('none');
+  });
+
+  it('clears tenant when user is not authenticated', async () => {
+    mockAuthContext = {
+      ...MOCK_AUTH_CONTEXT_UNAUTHENTICATED,
+    };
+
+    render(
+      <TenantProvider>
+        <TenantConsumer />
+      </TenantProvider>
+    );
+
+    // Should be ready
+    await waitFor(() => {
+      expect(screen.getByTestId('loading')).toHaveTextContent('ready');
+    });
+    
+    // Should have no tenant when not authenticated
     expect(screen.getByTestId('tenant-name')).toHaveTextContent('none');
   });
 

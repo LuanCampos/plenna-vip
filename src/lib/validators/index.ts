@@ -54,3 +54,25 @@ export {
   bookingClientInfoStepSchema,
   type PublicBookingInput,
 } from './bookingSchema';
+
+export {
+  passwordSchema,
+  loginSchema,
+  registerSchema,
+  type LoginInput,
+  type RegisterInput,
+} from './authSchema';
+
+export {
+  userProfileUpdateSchema,
+  type UserProfileUpdateInput,
+} from './userProfileSchema';
+
+export {
+  assignableRoleSchema,
+  fullRoleSchema,
+  tenantUserCreateSchema,
+  tenantUserUpdateSchema,
+  type TenantUserCreateInput,
+  type TenantUserUpdateInput,
+} from './tenantUserSchema';

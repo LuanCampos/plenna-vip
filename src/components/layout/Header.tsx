@@ -1,13 +1,19 @@
+/**
+ * Header component with user menu.
+ */
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTenant } from '@/contexts/TenantContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Moon, Sun, Globe } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { UserMenu } from '@/components/auth/UserMenu';
 
 export const Header = () => {
   const { t, language, setLanguage } = useLanguage();
   const { theme, setTheme } = useTheme();
   const { currentTenant } = useTenant();
+  const { user } = useAuth();
 
   const toggleLanguage = () => {
     setLanguage(language === 'pt' ? 'en' : 'pt');
@@ -54,6 +60,9 @@ export const Header = () => {
             <Moon className="h-5 w-5" />
           )}
         </Button>
+
+        {/* User Menu */}
+        {user && <UserMenu />}
       </div>
     </header>
   );

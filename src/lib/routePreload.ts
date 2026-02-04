@@ -13,6 +13,7 @@ export const routePreload = {
   '/clients': () => preload(() => import('@/pages/Clients')),
   '/services': () => preload(() => import('@/pages/Services')),
   '/professionals': () => preload(() => import('@/pages/Professionals')),
+  '/team': () => preload(() => import('@/pages/Team')),
   '/settings': () => preload(() => import('@/pages/Settings')),
 } as const;
 

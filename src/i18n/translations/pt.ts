@@ -50,6 +50,11 @@ export const pt = {
   appointmentCreated: 'Agendamento criado com sucesso',
   appointmentUpdated: 'Agendamento atualizado com sucesso',
   appointmentDeleted: 'Agendamento excluído com sucesso',
+  appointmentCancelled: 'Agendamento cancelado com sucesso',
+  errorCreatingAppointment: 'Erro ao criar agendamento',
+  errorCancellingAppointment: 'Erro ao cancelar agendamento',
+  statusUpdated: 'Status atualizado com sucesso',
+  errorUpdatingStatus: 'Erro ao atualizar status',
   selectClient: 'Selecione o cliente',
   selectService: 'Selecione o serviço',
   selectProfessional: 'Selecione o profissional',
@@ -62,6 +67,8 @@ export const pt = {
   statusCompleted: 'Concluído',
   statusCancelled: 'Cancelado',
   statusNoShow: 'Não compareceu',
+  walkIn: 'Sem cliente',
+  viewAppointment: 'Ver agendamento',
   
   // Clients
   newClient: 'Novo Cliente',
@@ -204,6 +211,63 @@ export const pt = {
   endDate: 'Data final',
   singleDay: 'Apenas um dia',
   dateRange: 'Período',
+  
+  // User Profile
+  myProfile: 'Meu Perfil',
+  editProfile: 'Editar Perfil',
+  profileUpdated: 'Perfil atualizado',
+  profileUpdateError: 'Erro ao atualizar perfil',
+  avatarUrl: 'URL do Avatar',
+  
+  // Team
+  team: 'Equipe',
+  teamDescription: 'Gerencie os membros da sua equipe',
+  teamMembers: 'Membros da Equipe',
+  addMember: 'Adicionar Membro',
+  editMember: 'Editar Membro',
+  removeMember: 'Remover Membro',
+  inviteMember: 'Convidar Membro',
+  memberAdded: 'Membro adicionado',
+  memberUpdated: 'Membro atualizado',
+  memberRemoved: 'Membro removido',
+  memberAddError: 'Erro ao adicionar membro',
+  memberUpdateError: 'Erro ao atualizar membro',
+  memberRemoveError: 'Erro ao remover membro',
+  userNotFound: 'Usuário não encontrado',
+  userAlreadyMember: 'Usuário já é membro',
+  cannotRemoveOwner: 'Não é possível remover o proprietário',
+  cannotEditOwner: 'Não é possível editar o proprietário',
+  noTeamMembers: 'Nenhum membro na equipe',
+  addFirstMember: 'Adicione seu primeiro membro',
+  confirmRemoveMember: 'Tem certeza que deseja remover este membro?',
+  remove: 'Remover',
+  unknown: 'Desconhecido',
+  
+  // Roles
+  roleOwner: 'Proprietário',
+  roleAdmin: 'Administrador',
+  roleStaff: 'Colaborador',
+  selectRole: 'Selecione o cargo',
+  
+  // Permissions
+  permissionDenied: 'Você não tem permissão para esta ação',
+  adminOnly: 'Apenas administradores',
+  ownerOnly: 'Apenas o proprietário',
+  
+  // Session
+  sessionExpired: 'Sua sessão expirou',
+  pleaseLoginAgain: 'Por favor, faça login novamente',
+  
+  // Auth validation
+  confirmPassword: 'Confirmar Senha',
+  passwordTooShort: 'Senha deve ter pelo menos 6 caracteres',
+  passwordsDoNotMatch: 'As senhas não coincidem',
+  loginSuccess: 'Login realizado com sucesso',
+  registerSuccess: 'Conta criada com sucesso',
+  loginError: 'Erro ao fazer login',
+  registerError: 'Erro ao criar conta',
+  invalidCredentials: 'Email ou senha inválidos',
+  emailInUse: 'Este email já está em uso',
 } as const;
 
 export type TranslationKey = keyof typeof pt;

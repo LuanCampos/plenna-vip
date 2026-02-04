@@ -20,9 +20,9 @@ export const MOCK_VALID_APPOINTMENT = {
   client_id: MOCK_CLIENT_ID,
   professional_id: MOCK_PROFESSIONAL_ID,
   start_time: '2026-02-02T10:00:00Z',
-  service_ids: [MOCK_SERVICE_ID],
+  service_ids: [MOCK_SERVICE_ID] as string[],
   notes: 'Cliente preferencial',
-} as const;
+};
 
 /**
  * Walk-in appointment (no client).
@@ -31,15 +31,15 @@ export const MOCK_WALKIN_APPOINTMENT = {
   ...MOCK_VALID_APPOINTMENT,
   client_id: null,
   notes: 'Walk-in client',
-} as const;
+};
 
 /**
  * Appointment with multiple services.
  */
 export const MOCK_MULTI_SERVICE_APPOINTMENT = {
   ...MOCK_VALID_APPOINTMENT,
-  service_ids: [MOCK_SERVICE_ID, MOCK_SERVICE_ID_2],
-} as const;
+  service_ids: [MOCK_SERVICE_ID, MOCK_SERVICE_ID_2] as string[],
+};
 
 /**
  * Appointment entity as returned from database.
@@ -53,6 +53,8 @@ export const MOCK_APPOINTMENT_ENTITY = {
   end_time: '2026-02-02T10:30:00Z',
   status: 'scheduled' as const,
   notes: 'Cliente preferencial',
+  total_duration: 30,
+  total_price: 50.00,
   created_at: '2026-01-15T10:00:00Z',
   updated_at: '2026-01-15T10:00:00Z',
 } as const;
@@ -103,11 +105,100 @@ export const MOCK_RESCHEDULE_WITH_PROFESSIONAL = {
 } as const;
 
 /**
+ * Mock appointment service (N:N relationship).
+ */
+export const MOCK_APPOINTMENT_SERVICE = {
+  id: 'as0e8400-e29b-41d4-a716-446655440001',
+  tenant_id: MOCK_TENANT_ID,
+  appointment_id: MOCK_APPOINTMENT_ID,
+  service_id: MOCK_SERVICE_ID,
+  service_name_at_booking: 'Corte Masculino',
+  price_at_booking: 50.00,
+  duration_at_booking: 30,
+  order_index: 0,
+  created_at: '2026-01-15T10:00:00Z',
+} as const;
+
+/**
+ * Second appointment service for multi-service tests.
+ */
+export const MOCK_APPOINTMENT_SERVICE_2 = {
+  id: 'as0e8400-e29b-41d4-a716-446655440002',
+  tenant_id: MOCK_TENANT_ID,
+  appointment_id: MOCK_APPOINTMENT_ID,
+  service_id: MOCK_SERVICE_ID_2,
+  service_name_at_booking: 'Barba',
+  price_at_booking: 30.00,
+  duration_at_booking: 20,
+  order_index: 1,
+  created_at: '2026-01-15T10:00:00Z',
+} as const;
+
+/**
+ * Appointment with details (client, professional, services).
+ */
+export const MOCK_APPOINTMENT_WITH_DETAILS = {
+  ...MOCK_APPOINTMENT_ENTITY,
+  client: {
+    id: MOCK_CLIENT_ID,
+    name: 'Maria Silva',
+    phone: '11999999999',
+  },
+  professional: {
+    id: MOCK_PROFESSIONAL_ID,
+    name: 'João Barbeiro',
+    avatar_url: undefined as string | undefined,
+  },
+  services: [MOCK_APPOINTMENT_SERVICE],
+};
+
+/**
+ * Appointment with multiple services.
+ */
+export const MOCK_APPOINTMENT_WITH_MULTI_SERVICES = {
+  ...MOCK_APPOINTMENT_ENTITY,
+  total_duration: 50,
+  total_price: 80.00,
+  end_time: '2026-02-02T10:50:00Z',
+  client: {
+    id: MOCK_CLIENT_ID,
+    name: 'Maria Silva',
+    phone: '11999999999',
+  },
+  professional: {
+    id: MOCK_PROFESSIONAL_ID,
+    name: 'João Barbeiro',
+    avatar_url: undefined as string | undefined,
+  },
+  services: [MOCK_APPOINTMENT_SERVICE, MOCK_APPOINTMENT_SERVICE_2],
+};
+
+/**
  * Factory function to create appointment with custom overrides.
  */
 export function createMockAppointment(overrides: Record<string, unknown> = {}) {
   return {
     ...MOCK_VALID_APPOINTMENT,
+    ...overrides,
+  };
+}
+
+/**
+ * Factory function to create appointment entity with custom overrides.
+ */
+export function createMockAppointmentEntity(overrides: Record<string, unknown> = {}) {
+  return {
+    ...MOCK_APPOINTMENT_ENTITY,
+    ...overrides,
+  };
+}
+
+/**
+ * Factory function to create appointment with details.
+ */
+export function createMockAppointmentWithDetails(overrides: Record<string, unknown> = {}) {
+  return {
+    ...MOCK_APPOINTMENT_WITH_DETAILS,
     ...overrides,
   };
 }

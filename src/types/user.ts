@@ -9,6 +9,7 @@ export type UserRole = 'owner' | 'admin' | 'staff';
 export interface UserProfile {
   id: string;
   name: string;
+  email?: string;
   phone?: string;
   avatar_url?: string;
   created_at: string;

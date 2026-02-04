@@ -51,6 +51,66 @@ npm run build           # 4. Build sem erros
 - Ordem: durante o dev rode `tsc` a cada 2–3 arquivos; antes de finalizar: tsc → test → lint → build.
 - **NÃO avançar** se qualquer comando falhar. Alterações não estão completas até todos passarem.
 
-## Papéis [Planejador] / [Executor] / [Revisor]
+## Papéis de Execução
 
-Nenhum papel pode violar: fluxo Component → Hook → Service, regras absolutas, ou pular verificação (test/lint/build) quando houver mudanças de código. Em conflito com o plano, as regras vencem.
+Prompts com `[Planejador]`, `[Executor]` ou `[Revisor]` ativam o papel correspondente.
+
+⚠️ **Nenhum papel pode violar:** fluxo Component → Hook → Service, regras absolutas, ou verificação (test/lint/build). Em conflito com o plano, as regras vencem.
+
+---
+
+### [Planejador]
+
+**Objetivo:** Definir plano completo e verificável, SEM escrever código.
+
+**Saída:** `docs/plan-<nome-curto>.md` contendo:
+1. Objetivo da mudança
+2. Arquivos a criar/alterar/remover
+3. O que muda em cada arquivo (o quê + por quê)
+4. Tipos e contratos afetados
+5. Chaves i18n (pt.ts e en.ts)
+6. Testes a criar/alterar
+7. Critérios de conclusão (test ✓ lint ✓ build ✓)
+
+**Regras:** Considerar impacto em hooks, services, páginas. Sempre incluir testes e i18n. Não escrever código.
+
+---
+
+### [Executor]
+
+**Objetivo:** Implementar EXATAMENTE o que está no plano.
+
+**Entrada:** Markdown do Planejador.
+
+**Ordem obrigatória:**
+1. Tipos → 2. Services → 3. Hooks → 4. Componentes/Páginas → 5. i18n → 6. Testes
+
+**Deve:** Alterar apenas arquivos do plano. Seguir regras absolutas, tokens, a11y.
+
+**Saída:** Código + testes + confirmação: `test ✓ lint ✓ build ✓`
+
+**Proibido:** Mudar arquitetura, refatorar fora do escopo, usar `any`/`console.*`.
+
+---
+
+### [Revisor]
+
+**Objetivo:** Validar implementação contra o plano e regras.
+
+**Entrada:** Plano (`.md`) + código implementado.
+
+**Verificar:**
+- Fluxo arquitetural (sem Supabase em componente)
+- Regras absolutas e tokens
+- i18n completo
+- Testes cobrindo comportamento
+- Passaria: test ✓ lint ✓ build ✓
+
+**Saída obrigatória:**
+1. ✅ Itens corretos
+2. ❌ Problemas + ação para corrigir
+3. 📌 Veredito: `APROVADO` ou `REPROVADO` + ajustes mínimos
+
+**Proibido:** Reimplementar, sugerir melhorias fora do escopo.
+
+**Fluxo:** Se `REPROVADO`, relatório serve como entrada para `[Planejador]`.

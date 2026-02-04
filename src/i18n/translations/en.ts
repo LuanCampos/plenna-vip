@@ -50,6 +50,11 @@ export const en = {
   appointmentCreated: 'Appointment created successfully',
   appointmentUpdated: 'Appointment updated successfully',
   appointmentDeleted: 'Appointment deleted successfully',
+  appointmentCancelled: 'Appointment cancelled successfully',
+  errorCreatingAppointment: 'Error creating appointment',
+  errorCancellingAppointment: 'Error cancelling appointment',
+  statusUpdated: 'Status updated successfully',
+  errorUpdatingStatus: 'Error updating status',
   selectClient: 'Select client',
   selectService: 'Select service',
   selectProfessional: 'Select professional',
@@ -62,6 +67,8 @@ export const en = {
   statusCompleted: 'Completed',
   statusCancelled: 'Cancelled',
   statusNoShow: 'No Show',
+  walkIn: 'Walk-in',
+  viewAppointment: 'View appointment',
   
   // Clients
   newClient: 'New Client',
@@ -204,6 +211,63 @@ export const en = {
   endDate: 'End date',
   singleDay: 'Single day',
   dateRange: 'Date range',
+  
+  // User Profile
+  myProfile: 'My Profile',
+  editProfile: 'Edit Profile',
+  profileUpdated: 'Profile updated',
+  profileUpdateError: 'Error updating profile',
+  avatarUrl: 'Avatar URL',
+  
+  // Team
+  team: 'Team',
+  teamDescription: 'Manage your team members',
+  teamMembers: 'Team Members',
+  addMember: 'Add Member',
+  editMember: 'Edit Member',
+  removeMember: 'Remove Member',
+  inviteMember: 'Invite Member',
+  memberAdded: 'Member added',
+  memberUpdated: 'Member updated',
+  memberRemoved: 'Member removed',
+  memberAddError: 'Error adding member',
+  memberUpdateError: 'Error updating member',
+  memberRemoveError: 'Error removing member',
+  userNotFound: 'User not found',
+  userAlreadyMember: 'User is already a member',
+  cannotRemoveOwner: 'Cannot remove owner',
+  cannotEditOwner: 'Cannot edit owner',
+  noTeamMembers: 'No team members',
+  addFirstMember: 'Add your first team member',
+  confirmRemoveMember: 'Are you sure you want to remove this member?',
+  remove: 'Remove',
+  unknown: 'Unknown',
+  
+  // Roles
+  roleOwner: 'Owner',
+  roleAdmin: 'Administrator',
+  roleStaff: 'Staff',
+  selectRole: 'Select role',
+  
+  // Permissions
+  permissionDenied: 'You do not have permission for this action',
+  adminOnly: 'Administrators only',
+  ownerOnly: 'Owner only',
+  
+  // Session
+  sessionExpired: 'Your session has expired',
+  pleaseLoginAgain: 'Please log in again',
+  
+  // Auth validation
+  confirmPassword: 'Confirm Password',
+  passwordTooShort: 'Password must be at least 6 characters',
+  passwordsDoNotMatch: 'Passwords do not match',
+  loginSuccess: 'Successfully logged in',
+  registerSuccess: 'Account created successfully',
+  loginError: 'Error signing in',
+  registerError: 'Error creating account',
+  invalidCredentials: 'Invalid email or password',
+  emailInUse: 'This email is already in use',
 } as const;
 
 export type TranslationKey = keyof typeof en;

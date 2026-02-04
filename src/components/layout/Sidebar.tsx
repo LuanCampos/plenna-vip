@@ -6,6 +6,7 @@ import {
   Users, 
   Scissors, 
   UserCircle,
+  Users2,
   Settings,
   Menu,
   X,
@@ -22,6 +23,7 @@ const navItems = [
   { to: '/clients', icon: Users, labelKey: 'clients' },
   { to: '/services', icon: Scissors, labelKey: 'services' },
   { to: '/professionals', icon: UserCircle, labelKey: 'professionals' },
+  { to: '/team', icon: Users2, labelKey: 'team' },
 ] as const;
 
 export const Sidebar = () => {
