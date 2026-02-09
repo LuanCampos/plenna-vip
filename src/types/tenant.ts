@@ -6,24 +6,41 @@
 export interface TimeRange {
   start: string; // HH:mm
   end: string; // HH:mm
+  enabled?: boolean;
 }
 
+export interface DayHours {
+  start: string; // HH:mm
+  end: string; // HH:mm
+  enabled?: boolean;
+}
+
+// BusinessHours accepts either array format (legacy) or single object (new)
+export type DaySchedule = DayHours | TimeRange[] | undefined;
+
 export interface BusinessHours {
-  monday: TimeRange[];
-  tuesday: TimeRange[];
-  wednesday: TimeRange[];
-  thursday: TimeRange[];
-  friday: TimeRange[];
-  saturday: TimeRange[];
-  sunday: TimeRange[];
+  monday?: DaySchedule;
+  tuesday?: DaySchedule;
+  wednesday?: DaySchedule;
+  thursday?: DaySchedule;
+  friday?: DaySchedule;
+  saturday?: DaySchedule;
+  sunday?: DaySchedule;
+  [key: string]: DaySchedule;
 }
 
 export interface TenantSettings {
-  max_photos_per_appointment: number;
-  booking_slot_duration: number;
-  allow_multiple_same_service: boolean;
-  require_phone_for_booking: boolean;
-  show_prices_publicly: boolean;
+  slotDuration?: number;
+  maxPhotosPerAppointment?: number;
+  allowMultipleSameService?: boolean;
+  requirePhoneForBooking?: boolean;
+  showPricesPublicly?: boolean;
+  // Legacy snake_case aliases
+  max_photos_per_appointment?: number;
+  booking_slot_duration?: number;
+  allow_multiple_same_service?: boolean;
+  require_phone_for_booking?: boolean;
+  show_prices_publicly?: boolean;
 }
 
 export interface Tenant {

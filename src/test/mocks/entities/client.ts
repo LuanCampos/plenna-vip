@@ -67,11 +67,12 @@ export const MOCK_CLIENT_ENTITY_2 = {
 export const MOCK_CLIENTS_LIST = [MOCK_CLIENT_ENTITY, MOCK_CLIENT_ENTITY_2] as const;
 
 /**
- * Factory function to create client with custom overrides.
+ * Factory function to create client entity with custom overrides.
+ * Returns a complete Client entity suitable for type-safe tests.
  */
 export function createMockClient(overrides: Record<string, unknown> = {}) {
   return {
-    ...MOCK_VALID_CLIENT,
+    ...MOCK_CLIENT_ENTITY,
     ...overrides,
   };
 }

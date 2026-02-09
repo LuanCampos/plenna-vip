@@ -88,11 +88,12 @@ export const MOCK_PROFESSIONALS_LIST = [
 ] as const;
 
 /**
- * Factory function to create professional with custom overrides.
+ * Factory function to create professional entity with custom overrides.
+ * Returns a complete Professional entity suitable for type-safe tests.
  */
 export function createMockProfessional(overrides: Record<string, unknown> = {}) {
   return {
-    ...MOCK_VALID_PROFESSIONAL,
+    ...MOCK_PROFESSIONAL_ENTITY,
     ...overrides,
   };
 }

@@ -6,3 +6,4 @@ export * from './service';
 export * from './professional';
 export * from './appointment';
 export * from './booking';
+export * from './tenant';

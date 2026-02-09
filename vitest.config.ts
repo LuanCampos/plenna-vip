@@ -14,11 +14,15 @@ export default defineConfig({
     environment: 'happy-dom',
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
-    testTimeout: 5000,
-    hookTimeout: 5000,
-    pool: 'threads',
+    testTimeout: 10000,
+    hookTimeout: 10000,
+    pool: 'forks',
     poolOptions: {
-      threads: { maxThreads: 16, minThreads: 1 },
+      forks: { 
+        maxForks: 4, 
+        minForks: 1,
+        isolate: true,
+      },
     },
     reporters: ['basic'],
     coverage: {

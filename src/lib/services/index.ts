@@ -8,3 +8,6 @@ export { appointmentService } from './appointmentService';
 export { availabilityService } from './availabilityService';
 export { userProfileService } from './userProfileService';
 export { tenantUserService } from './tenantUserService';
+export { bookingService } from './bookingService';
+export { dashboardService } from './dashboardService';
+export { tenantService } from './tenantService';

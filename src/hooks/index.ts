@@ -82,3 +82,27 @@ export {
   useUserTenants,
   useHasAnyTenant,
 } from './useUserTenants';
+
+export {
+  bookingKeys,
+  useTenantBySlug,
+  usePublicServices,
+  useProfessionalsForServices,
+  useCreateBooking,
+} from './useBooking';
+
+export {
+  dashboardKeys,
+  useDashboardStats,
+  useUpcomingAppointments,
+} from './useDashboard';
+
+export {
+  tenantKeys,
+  useTenantDetails,
+  useUpdateTenant,
+  useUpdateBusinessHours,
+  useUpdateTenantSettings,
+  useUpdateTenantSlug,
+  useCheckSlugAvailability,
+} from './useTenantSettings';

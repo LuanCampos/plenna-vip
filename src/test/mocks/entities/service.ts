@@ -81,11 +81,12 @@ export const MOCK_SERVICES_LIST = [
 ] as const;
 
 /**
- * Factory function to create service with custom overrides.
+ * Factory function to create service entity with custom overrides.
+ * Returns a complete Service entity suitable for type-safe tests.
  */
 export function createMockService(overrides: Record<string, unknown> = {}) {
   return {
-    ...MOCK_VALID_SERVICE,
+    ...MOCK_SERVICE_ENTITY,
     ...overrides,
   };
 }
